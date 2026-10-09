@@ -42,6 +42,7 @@
   var copyBtn = document.getElementById("quiz-copy");
   var status = document.getElementById("quiz-status");
   var telField = document.getElementById("tel-field");
+  var mailHint = document.getElementById("mail-hint");
 
   function values(name) {
     return Array.prototype.map.call(form.querySelectorAll('[name="' + name + '"]:checked'), function (i) { return i.value; });
@@ -80,7 +81,7 @@
     if (values("kanal")[0] === "telefon") {
       lines.push("Bitte ruf mich an: " + value("telefon"));
     } else {
-      lines.push("Bitte antworte mir per E-Mail.");
+      lines.push("Bitte antworte mir einfach auf diese E-Mail.");
     }
     var times = values("zeit");
     if (times.length) lines.push("Gut erreichbar: " + times.join(", "));
@@ -118,7 +119,9 @@
 
   form.addEventListener("input", function () { next.disabled = !valid(current); });
   form.addEventListener("change", function () {
-    telField.hidden = values("kanal")[0] !== "telefon";
+    var phone = values("kanal")[0] === "telefon";
+    telField.hidden = !phone;
+    mailHint.hidden = phone;
     next.disabled = !valid(current);
   });
   form.addEventListener("submit", function (e) { e.preventDefault(); });

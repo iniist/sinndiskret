@@ -49,14 +49,12 @@
         </div>
         <figure class="hero-art" aria-hidden="true">
           <div class="blob"></div>
-          <svg class="cube" viewBox="0 0 300 300">
-            <path d="M40 100 L100 40 L260 40"/>
-            <path d="M40 100 L130 100 L156 74 L226 74 L260 40 L260 200 L200 260 L40 260 Z"/>
-            <path d="M130 100 L130 170 L200 170 L200 260"/>
-            <path d="M200 170 L226 144 L226 74"/>
-            <path d="M130 170 L156 144 L156 74"/>
-            <path d="M156 144 L226 144"/>
-            <circle class="dot" cx="156" cy="144" r="7"/>
+          <svg class="cube" viewBox="44 44 212 212">
+            <path d="M150 193 L150 236 L236 193 L236 107 L150 64 L64 107 L64 193 L150 236"/>
+            <path d="M236 107 L193 128.5 L150 107 L107 128.5 L64 107"/>
+            <path d="M193 128.5 L193 171.5 L150 193 L107 171.5 L107 128.5"/>
+            <path d="M193 171.5 L150 150 L107 171.5"/>
+            <path d="M150 107 L150 150"/>
           </svg>
           <figcaption>Ein kleiner Würfel – oder eine fehlende Ecke?</figcaption>
         </figure>
@@ -307,6 +305,7 @@
               <label class="choice"><input type="radio" name="kanal" value="email" checked><span>per E-Mail</span></label>
               <label class="choice"><input type="radio" name="kanal" value="telefon"><span>per Telefon</span></label>
             </div>
+            <p class="help" id="mail-hint" style="margin-top:1rem">Ich antworte einfach auf deine E-Mail – deine Adresse musst du hier nicht eintragen.</p>
             <label class="field" id="tel-field" hidden style="margin-top:1rem"><span>Deine Telefonnummer</span><input name="telefon" type="tel" autocomplete="tel"></label>
             <p class="help" style="margin-top:1.25rem">Gut erreichbar bin ich …</p>
             <div class="choices">
