@@ -6,11 +6,6 @@ Options -Indexes
 # Eigene Fehlerseite
 ErrorDocument 404 /404.html
 
-# Interne Datei der Deploy-Action nicht ausliefern
-<Files ".ftp-deploy-sync-state.json">
-  Require all denied
-</Files>
-
 # Sicherheits-Header
 <IfModule mod_headers.c>
   Header set X-Content-Type-Options "nosniff"

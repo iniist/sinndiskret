@@ -1,7 +1,7 @@
 # SinnDiskret
 
 Website **sinndiskret.de** – statische Seiten (HTML/CSS), gehostet bei STRATO.
-Änderungen im Repo werden automatisch per GitHub Actions zu STRATO hochgeladen.
+Änderungen im Repo werden automatisch per GitHub Actions über SFTP zu STRATO hochgeladen.
 
 ## So funktioniert es
 
@@ -28,25 +28,26 @@ Kleine Textänderungen kannst du auch selbst machen: Datei in GitHub öffnen →
 
 > Die Bezeichnungen im STRATO-Menü ändern sich gelegentlich. Wenn ein Menüpunkt anders heißt, such nach dem fett gedruckten Begriff.
 
-### Schritt 1: FTP-Zugang bei STRATO finden
+### Schritt 1: SFTP-Zugang für GitHub bei STRATO anlegen
 
-1. Bei https://www.strato.de/apps/CustomerService einloggen.
-2. Dein Paket „Hosting Plus“ auswählen.
-3. Unter **Hosting** den Bereich **SFTP/FTP-Zugänge** (oder „FTP-Benutzer“) öffnen.
-4. Notiere dir:
-   - **Server:** `ftp.strato.de`
-   - **Benutzername:** steht dort, meist deine Domain oder eine Kennung
-   - **Passwort:** Falls du es nicht mehr weißt, dort ein neues setzen.
+1. Bei https://www.strato.de einloggen → Paket „STRATO Hosting Plus“.
+2. Links **Datenbanken und Webspace** → **SFTP & SSH**.
+3. Oben rechts stehen **Server** (z. B. `52571554.ssh.w1.strato.hosting`) und **Port** (`22`). Den Server notieren.
+4. **Neu anlegen** klicken:
+   - **Startverzeichnis:** `/` (damit der Zugang beide Ordner erreicht)
+   - **Kommentar:** `GitHub Deploy`
+   - **Passwort:** lang und zufällig, z. B. aus einem Passwort-Manager
+5. Nach dem Speichern erscheint der neue Zugang in der Liste. Den **Benutzernamen** notieren (Format `stu…`).
 
-Tipp: Wenn STRATO dir anbietet, einen **zusätzlichen FTP-Benutzer** anzulegen, ist das für GitHub die bessere Wahl. Dann kannst du ihn jederzeit sperren, ohne deinen Hauptzugang zu ändern. Er muss Zugriff auf das Hauptverzeichnis `/` haben, damit er beide Ordner erreicht.
+Ein eigener Zugang nur für GitHub hat den Vorteil, dass du ihn jederzeit löschen kannst, ohne andere Zugänge zu berühren.
 
 ### Schritt 2: Ordner anlegen
 
-1. Im STRATO-Menü unter **Hosting** den **Webspace-Explorer** bzw. **Dateimanager** öffnen.
+1. Im STRATO-Menü links **Datenbanken und Webspace** → **Webspace** öffnen.
 2. Im obersten Verzeichnis (`/`) zwei Ordner anlegen:
    - `sinndiskret`
    - `sinndiskret-test`
-3. Falls `sinndiskret` schon existiert und Dateien enthält: Diese erst herunterladen (Sicherung). Der Upload überschreibt gleichnamige Dateien.
+3. Falls `sinndiskret` schon existiert und Dateien enthält: Diese erst herunterladen (Sicherung). Der Upload macht den Ordner zu einer genauen Kopie von `public/` und **löscht dabei Dateien, die nicht im Repo sind**.
 
 ### Schritt 3: GitHub Secrets anlegen
 
@@ -55,9 +56,9 @@ Tipp: Wenn STRATO dir anbietet, einen **zusätzlichen FTP-Benutzer** anzulegen, 
 
 | Name | Wert |
 |---|---|
-| `FTP_SERVER`   | `ftp.strato.de` |
-| `FTP_USERNAME` | dein FTP-Benutzername aus Schritt 1 |
-| `FTP_PASSWORD` | dein FTP-Passwort aus Schritt 1 |
+| `SFTP_SERVER`   | der Server aus Schritt 1, z. B. `52571554.ssh.w1.strato.hosting` |
+| `SFTP_USERNAME` | der Benutzername aus Schritt 1, z. B. `stu123456789` |
+| `SFTP_PASSWORD` | das Passwort aus Schritt 1 |
 
 Die Werte sind danach nicht mehr einsehbar, nur überschreibbar. Das ist so gewollt.
 
@@ -104,9 +105,9 @@ Die Werte sind danach nicht mehr einsehbar, nur überschreibbar. Das ist so gewo
 
 | Symptom im Actions-Log | Ursache / Lösung |
 |---|---|
-| `530 Login incorrect` | Benutzername oder Passwort in den Secrets falsch. Neu setzen (Schritt 3). |
-| `ENOTFOUND` / Timeout | `FTP_SERVER` falsch geschrieben. Muss genau `ftp.strato.de` sein. |
-| Fehler mit „certificate“ / TLS | Bei mir melden. Dann wird die Verschlüsselungseinstellung angepasst. |
+| `Login failed` / `Login incorrect` | Benutzername oder Passwort in den Secrets falsch. Neu setzen (Schritt 3). |
+| `Name or service not known` / Timeout | `SFTP_SERVER` falsch geschrieben. Genau so übernehmen, wie er bei STRATO unter „SFTP & SSH“ steht. |
+| `No such file or directory` | Ordner `sinndiskret` bzw. `sinndiskret-test` fehlt (Schritt 2). |
 | Haken grün, aber Seite zeigt alten Stand | Domain zeigt auf falschen Ordner (Schritt 6/7) oder Browser-Cache. |
 | Seite zeigt „500 Internal Server Error“ | Meist eine Zeile in `.htaccess`, die der Server nicht kennt. Letzte Änderung an `.htaccess` rückgängig machen. |
 
@@ -123,7 +124,7 @@ public/                  → wird hochgeladen
   robots.txt             Hinweise für Suchmaschinen
   .htaccess              Server-Einstellungen (Apache)
 .github/workflows/
-  deploy.yml             automatischer Upload zu STRATO
+  deploy.yml             automatischer Upload zu STRATO (SFTP)
 README.md                diese Anleitung
 ```
 
