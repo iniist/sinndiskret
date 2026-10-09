@@ -104,6 +104,15 @@ Die Werte sind danach nicht mehr einsehbar, nur überschreibbar. Das ist so gewo
 
 ---
 
+## Google Search Console (optional)
+
+1. https://search.google.com/search-console öffnen → **Property hinzufügen** → **URL-Präfix** → `https://sinndiskret.de/`.
+2. Bestätigungsmethode **HTML-Tag** wählen und das angezeigte `<meta name="google-site-verification" …>` kopieren.
+3. Den Tag in `public/index.html` direkt unter `<meta name="theme-color" …>` einfügen (oder Claude schicken), über `dev` live stellen, dann in der Search Console **Bestätigen** klicken.
+4. Unter **Sitemaps** `sitemap.xml` eintragen.
+
+Alte Adressen der früheren WordPress-Seite (z. B. `/coaching-freiburg/`) leitet `public/.htaccess` dauerhaft auf die passenden Abschnitte der Startseite um.
+
 ## Woran erkenne ich, dass der Deploy geklappt hat?
 
 1. **GitHub → Actions:** Der neueste Lauf hat einen **grünen Haken**. Im Lauf steht unten in der Zusammenfassung die Prüf-Adresse.
@@ -135,6 +144,7 @@ public/                  → wird hochgeladen
   css/style.css          Gestaltung
   favicon.svg            Symbol im Browser-Tab
   robots.txt             Hinweise für Suchmaschinen
+  sitemap.xml            Seitenübersicht für Suchmaschinen
   .htaccess              Server-Einstellungen (Apache)
 .github/workflows/
   deploy.yml             automatischer Upload zu STRATO (SFTP)
