@@ -18,7 +18,20 @@ Website **sinndiskret.de** – statische Seiten (HTML/CSS), gehostet bei STRATO.
 
 1. Eine Änderung kommt als **Pull Request (PR) auf `dev`**.
 2. Du mergst den PR → nach 1–2 Minuten ist die Änderung auf **test.sinndiskret.de**.
-3. Passt alles: PR von `dev` nach `main` öffnen und mergen → Änderung ist auf **sinndiskret.de**.
+3. Passt alles: **Live stellen** (siehe unten) → Änderung ist auf **sinndiskret.de**.
+
+`dev` ist immer der Stand der Testseite, `main` immer der Stand der echten Seite. Änderungen gehen nie direkt nach `main`, sondern immer erst über `dev`.
+
+### Live stellen (Testseite → echte Seite)
+
+1. Öffne https://github.com/iniist/sinndiskret/compare/main...dev
+2. Oben muss stehen: **base: main ← compare: dev**. Darunter siehst du alle Änderungen seit dem letzten Livegang.
+3. **Create pull request** → Titel z. B. `Live: neue Texte` → **Create pull request**.
+4. Unten **Merge pull request** → **Confirm merge**.
+   Wichtig: die normale Variante „Create a merge commit“ verwenden, **nicht** „Squash and merge“ oder „Rebase and merge“. Sonst laufen `dev` und `main` auseinander und der nächste Livegang zeigt Konflikte.
+5. Unter **Actions** auf den grünen Haken warten, dann https://sinndiskret.de/version.txt prüfen (Branch: main, aktuelle Uhrzeit).
+
+Zeigt GitHub bei Schritt 2 „There isn't anything to compare“, ist die echte Seite bereits auf dem Stand der Testseite.
 
 Kleine Textänderungen kannst du auch selbst machen: Datei in GitHub öffnen → Stift-Symbol → ändern → unten „Commit changes“ → „Create a new branch … and start a pull request“ → als Ziel (`base`) `dev` wählen.
 
@@ -91,6 +104,15 @@ Die Werte sind danach nicht mehr einsehbar, nur überschreibbar. Das ist so gewo
 
 ---
 
+## Google Search Console (optional)
+
+1. https://search.google.com/search-console öffnen → **Property hinzufügen** → **URL-Präfix** → `https://sinndiskret.de/`.
+2. Bestätigungsmethode **HTML-Tag** wählen und das angezeigte `<meta name="google-site-verification" …>` kopieren.
+3. Den Tag in `public/index.html` direkt unter `<meta name="theme-color" …>` einfügen (oder Claude schicken), über `dev` live stellen, dann in der Search Console **Bestätigen** klicken.
+4. Unter **Sitemaps** `sitemap.xml` eintragen.
+
+Alte Adressen der früheren WordPress-Seite (z. B. `/coaching-freiburg/`) leitet `public/.htaccess` dauerhaft auf die passenden Abschnitte der Startseite um.
+
 ## Woran erkenne ich, dass der Deploy geklappt hat?
 
 1. **GitHub → Actions:** Der neueste Lauf hat einen **grünen Haken**. Im Lauf steht unten in der Zusammenfassung die Prüf-Adresse.
@@ -122,6 +144,7 @@ public/                  → wird hochgeladen
   css/style.css          Gestaltung
   favicon.svg            Symbol im Browser-Tab
   robots.txt             Hinweise für Suchmaschinen
+  sitemap.xml            Seitenübersicht für Suchmaschinen
   .htaccess              Server-Einstellungen (Apache)
 .github/workflows/
   deploy.yml             automatischer Upload zu STRATO (SFTP)
