@@ -1,0 +1,22 @@
+# Apache-Einstellungen für STRATO
+
+# Keine Verzeichnislisten anzeigen
+Options -Indexes
+
+# Eigene Fehlerseite
+ErrorDocument 404 /404.html
+
+# Sicherheits-Header
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set X-Frame-Options "SAMEORIGIN"
+</IfModule>
+
+# Weiterleitung auf HTTPS: erst aktivieren (Rauten entfernen), wenn das
+# SSL-Zertifikat für die Domain bei STRATO aktiv ist.
+# <IfModule mod_rewrite.c>
+#   RewriteEngine On
+#   RewriteCond %{HTTPS} !=on
+#   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# </IfModule>
