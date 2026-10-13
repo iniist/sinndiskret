@@ -1,4 +1,5 @@
 # Apache-Einstellungen für STRATO
+# (HTTPS- und www-Weiterleitung übernimmt STRATO selbst.)
 
 # Keine Verzeichnislisten anzeigen
 Options -Indexes
@@ -13,10 +14,26 @@ ErrorDocument 404 /404.html
   Header set X-Frame-Options "SAMEORIGIN"
 </IfModule>
 
-# Weiterleitung auf HTTPS: erst aktivieren (Rauten entfernen), wenn das
-# SSL-Zertifikat für die Domain bei STRATO aktiv ist.
-# <IfModule mod_rewrite.c>
-#   RewriteEngine On
-#   RewriteCond %{HTTPS} !=on
-#   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-# </IfModule>
+# Adressen der alten WordPress-Seite dauerhaft (301) auf die neue Seite
+# umleiten, damit alte Links und Suchergebnisse weiter funktionieren.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Alte Beitrags-/Seiten-IDs (z. B. /?p=12, /?page_id=5)
+  RewriteCond %{QUERY_STRING} (^|&)(p|page_id|cat|tag|s)= [NC]
+  RewriteRule ^$ /? [R=301,L]
+
+  # Bekannte Unterseiten -> passender Abschnitt
+  RewriteRule ^(daniel-scholz|daniel-m-scholz|ueber-mich|uber-mich|about)  /#ueber-mich       [R=301,L,NE,NC]
+  RewriteRule ^menschenkenntnis                                            /#menschenkenntnis [R=301,L,NE,NC]
+  RewriteRule ^(kontakt|fragebogen|termin|anfrage)                         /#kontakt          [R=301,L,NE,NC]
+  RewriteRule ^(paar|paare|paartherapie|paarcoaching|online-coaching)      /#anliegen         [R=301,L,NE,NC]
+  RewriteRule ^(coaching|beratung|einzelcoaching|angebot|leistungen)       /#anliegen         [R=301,L,NE,NC]
+  RewriteRule ^(impressum)/?$                                              /impressum.html    [R=301,L,NC]
+  RewriteRule ^(datenschutz|datenschutzerklaerung|datenschutzerklarung)/?$ /datenschutz.html  [R=301,L,NC]
+
+  # Alles andere aus WordPress (Ordner-Adressen, Feeds, wp-Pfade) -> Startseite
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.+/|wp-.*|feed|index\.php)$ / [R=301,L,NC]
+</IfModule>
